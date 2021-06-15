@@ -45,9 +45,9 @@ WEB="$( cd -P "$DIR/web" && pwd )"
 
 #install dependencies
 sudo apt-get update && sudo apt-get install -y \
-  supervisor build-essential intltool autoconf automake gcc perl pcre \
-  curl libcurl4 libcurl4-openssl-dev openssl openssl-dev libmysqlclient-dev mysql-client \
-  libpcre2-dev libxml2-dev libicu-dev libgraphicsmagick1-dev imagemagick libzip-dev libonig-dev libsodium-dev
+  supervisor build-essential intltool autoconf automake gcc perl curl pkg-config \
+  libpcre++-dev libcurl4 libcurl4-openssl-dev openssl libssl-dev libmysqlclient-dev mysql-client libxslt1-dev \
+  libpcre2-dev libxml2 libxml2-dev libicu-dev libmagick++-dev imagemagick libzip-dev libonig-dev libsodium-dev
 
 # Compile and Install Openresty
 tar -xzf ${OPT}/openresty-*.tar.gz -C ${OPT}/
@@ -92,6 +92,8 @@ cd ${OPT}/php-*/
   --enable-intl \
   --enable-ftp \
   --enable-mysqli \
+  --without-sqlite3 \
+  --without-pdo-sqlite \
   --with-ssh2 \
   --with-mcrypt \
   --with-libxml \
@@ -127,5 +129,4 @@ rm ${OPT}/wordpress.tar.gz
 rm -rf ${OPT}/wordpress
 rm -rf ${OPT}/openresty-*/
 rm -rf ${OPT}/php-*/
-rm -rf ${OPT}/MacOSX-*/
 ${BIN}/configure-ubuntu.sh

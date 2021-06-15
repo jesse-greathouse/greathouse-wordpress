@@ -105,6 +105,8 @@ cd ${OPT}/php-*/
   --enable-intl \
   --enable-ftp \
   --enable-mysqli \
+  --without-sqlite3 \
+  --without-pdo-sqlite \
   --with-ssh2 \
   --with-mcrypt \
   --with-libxml \
@@ -140,6 +142,5 @@ rm ${OPT}/wordpress.tar.gz
 rm -rf ${OPT}/wordpress
 rm -rf ${OPT}/openresty-*/
 rm -rf ${OPT}/php-*/
-rm -rf ${OPT}/MacOSX-*/
 
 ${BIN}/configure-amazon.sh

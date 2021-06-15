@@ -120,6 +120,8 @@ env PKG_CONFIG_PATH=/usr/local/opt/openssl/lib/pkgconfig:/usr/local/opt/libxml2/
       --enable-intl \
       --enable-ftp \
       --enable-mysqli \
+      --without-sqlite3 \
+      --without-pdo-sqlite \
       --with-ssh2 \
       --with-mcrypt \
       --with-libxml \
