@@ -53,6 +53,7 @@ get-pip.py
 !bin/update-wordpress.sh
 
 # etc
+etc/php-fpm.conf.default
 etc/php/php.ini
 etc/php-fpm.d/php-fpm.conf
 etc/php-fpm.d/www.conf.default
