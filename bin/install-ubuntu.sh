@@ -45,7 +45,7 @@ WEB="$( cd -P "$DIR/web" && pwd )"
 
 #install dependencies
 sudo apt-get update && sudo apt-get install -y \
-  supervisor build-essential intltool autoconf automake gcc perl curl pkg-config \
+  supervisor authbind build-essential intltool autoconf automake gcc perl curl pkg-config \
   libpcre++-dev libcurl4 libcurl4-openssl-dev openssl libssl-dev libmysqlclient-dev mysql-client libxslt1-dev \
   libpcre2-dev libxml2 libxml2-dev libicu-dev libmagick++-dev imagemagick libzip-dev libonig-dev libsodium-dev
 
