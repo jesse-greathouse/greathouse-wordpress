@@ -46,7 +46,7 @@ WEB="$( cd -P "$DIR/web" && pwd )"
 TMP="$( cd -P "$DIR/tmp" && pwd )"
 
 #install dependencies
-brew upgrade autoconf 
+brew upgrade
 
 brew install intltool autoconf automake python@3.8 gcc perl pcre \
   curl-openssl libiconv pkg-config openssl@1.1 mysql-client oniguruma \
@@ -80,7 +80,7 @@ export PATH=$PATH:/usr/local/mysql/bin
 tar -xf ${OPT}/openresty-*.tar.gz -C ${OPT}/
 
 # Fix the escape frontslash feature of lua-cjson
-sed -i '' s/"    NULL, NULL, NULL, NULL, NULL, NULL, NULL, \"\\\\\\\\\/\","/"    NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL,"/ßg ${OPT}/openresty-*/bundle/lua-cjson-2.1.0.7/lua_cjson.c
+sed -i '' s/"    NULL, NULL, NULL, NULL, NULL, NULL, NULL, \"\\\\\\\\\/\","/"    NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL,"/g ${OPT}/openresty-*/bundle/lua-cjson-2.1.0.7/lua_cjson.c
 
 cd ${OPT}/openresty-*/
 
