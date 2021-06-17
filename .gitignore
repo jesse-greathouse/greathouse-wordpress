@@ -33,6 +33,7 @@ get-pip.py
 *-e
 /bin/*
 !bin/bust-opcache.sh
+!bin/wp.sh.dist
 !bin/generate-diffie-hellman.pl
 !bin/install-pear.sh
 !bin/install-amazon.sh
@@ -96,8 +97,10 @@ var/run/*
 var/session/*
 var/socket/*
 var/upload/*
+var/wp-cli/*
 !var/cache/.gitkeep
 !var/cache/opcache/.gitkeep
+!var/cache/wp-cli/.gitkeep
 !var/keys/.gitkeep
 !var/logs/.gitkeep
 !var/pools/.gitkeep
@@ -105,6 +108,7 @@ var/upload/*
 !var/session/.gitkeep
 !var/socket/.gitkeep
 !var/upload/.gitkeep
+var/wp-cli/packages/.gitkeep
 
 # tmp
 tmp/
@@ -127,6 +131,7 @@ web/wp-admin/
 web/wp-includes/
 web/wp-content/uploads/
 !web/wp-content/uploads/.gitkeep
+web/wp-content/plugins/backend-code-test-jesse-greathouse
 web/index.php
 web/license.txt
 web/readme.html

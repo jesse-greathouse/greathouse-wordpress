@@ -44,7 +44,6 @@ TMP="$( cd -P "$DIR/tmp" && pwd )"
 VAR="$( cd -P "$DIR/var" && pwd )"
 WEB="$( cd -P "$DIR/web" && pwd )"
 USER="$(whoami)"
-PATH=~/Library/Python/2.7/bin:${PATH}
 
 if [ -z "$ENV" ]; then
     ENV=local

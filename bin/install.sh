@@ -79,19 +79,14 @@ cd ${OPT}/php-*/
   --enable-dom \
   --enable-exif \
   --enable-fileinfo \
-  --enable-hash \
-  --enable-imagick \
   --enable-json \
   --enable-mbstring \
   --enable-bcmath \
   --enable-intl \
   --enable-ftp \
-  --enable-mysqli \
-  --with-ssh2 \
-  --with-mcrypt \
+  --without-sqlite3 \
+  --without-pdo-sqlite \
   --with-libxml \
-  --with-simplexml \
-  --with-xmlreader \
   --with-xsl \
   --with-xmlrpc \
   --with-zlib \
@@ -101,14 +96,30 @@ cd ${OPT}/php-*/
   --with-zip \
   --with-sodium \
   --with-mysqli \
-  --with-pdo-mysql \
+  --with-pdo-mysql=mysqlnd \
   --with-mysql-sock \
-  --with-pcre-dir \
   --with-pcre-regex \
-  --with-imagick \
   --with-iconv
 make
 make install
+
+# Install Pear and ImageMagick extension
+# If php.ini exists, hide it before pear installs
+if [ -f "${ETC}/php/php.ini" ]; then
+  mv ${ETC}/php/php.ini ${ETC}/php/hidden.ini
+fi
+
+# Use expect to install Pear non-interactively
+${BIN}/install-pear.sh ${OPT}
+
+#replace the php.ini file
+if [ -f "${ETC}/hidden.ini" ]; then
+  mv ${ETC}/php/hidden.ini ${ETC}/php/php.ini
+fi
+
+# Build imagick extension with pecl
+export PATH="${OPT}/php/bin:${PATH}"
+${OPT}/pear/bin/pecl install imagick
 
 cd ${DIR}
 
@@ -117,12 +128,18 @@ curl -o ${OPT}/wordpress.tar.gz https://wordpress.org/latest.tar.gz
 tar -xf ${OPT}/wordpress.tar.gz -C ${OPT}/ --exclude="wp-content"
 cp -r ${OPT}/wordpress/* ${WEB}/
 
+# Download Wordpress CLI
+if [ -f "${BIN}/wp-cli.phar" ]; then
+  rm ${BIN}/wp-cli.phar
+fi
+curl -o ${BIN}/wp-cli.phar https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli.phar
+chmod +x ${BIN}/wp-cli.phar
+
 # Cleanup
+rm -rf ${OPT}/php-*/
 rm ${OPT}/wordpress.tar.gz
 rm -rf ${OPT}/wordpress
 rm -rf ${OPT}/openresty-*/
-rm -rf ${OPT}/php-*/
-rm -rf ${OPT}/MacOSX-*/
 
 printf "\n"
 printf "\n"

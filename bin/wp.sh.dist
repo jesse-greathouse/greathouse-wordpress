@@ -34,26 +34,40 @@ while [ -h "$SOURCE" ]; do # resolve $SOURCE until the file is no longer a symli
     SOURCE="$BIN/$TARGET" # if $SOURCE was a relative symlink, we need to resolve it relative to the path where the symlink file was located
   fi
 done
-USER="$( whoami )"
-GROUP="$( users )"
 RBIN="$( dirname "$SOURCE" )"
 BIN="$( cd -P "$( dirname "$SOURCE" )" && pwd )"
 DIR="$( cd -P "$BIN/../" && pwd )"
+ETC="$( cd -P "$DIR/etc" && pwd )"
 OPT="$( cd -P "$DIR/opt" && pwd )"
+SRC="$( cd -P "$DIR/src" && pwd )"
+TMP="$( cd -P "$DIR/tmp" && pwd )"
+VAR="$( cd -P "$DIR/var" && pwd )"
 WEB="$( cd -P "$DIR/web" && pwd )"
+USER="$(whoami)"
 
-# Download and Install Wordpress
-curl -o ${OPT}/wordpress.tar.gz https://wordpress.org/latest.tar.gz
-tar -xf ${OPT}/wordpress.tar.gz -C ${OPT}/ --exclude="wp-content"
-cp -r ${OPT}/wordpress/* ${WEB}/
-
-# Download Wordpress CLI
-if [ -f "${BIN}/wp-cli.phar" ]; then
-  rm ${BIN}/wp-cli.phar
+if [ -z "$ENV" ]; then
+    ENV=local
 fi
-curl -o ${BIN}/wp-cli.phar https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli.phar
-chmod +x ${BIN}/wp-cli.phar
 
-# Cleanup
-rm ${OPT}/wordpress.tar.gz
-rm -rf ${OPT}/wordpress
+ARGS=("$@")
+ARGS+=("--path=${WEB}")
+
+USER=${USER} BIN=${BIN} DIR=${DIR} ETC=${ETC} OPT=${OPT} SRC=${SRC} TMP=${TMP} VAR=${VAR} WEB=${WEB} \
+ENV=${ENV} DEBUG=${DEBUG} \
+CACHE_DIR=${VAR}/cache \
+LOG_DIR=${VAR}/logs \
+PORT=__PORT__ \
+GOOGLE_OAUTH_CLIENT_ID="__GOOGLE_OAUTH_CLIENT_ID__" \
+GOOGLE_OAUTH_CLIENT_SECRET="__GOOGLE_OAUTH_CLIENT_SECRET__" \
+SSL=__SSL__ \
+DEBUG=__DEBUG__ \
+REDIS_HOST=__REDIS_HOST__ \
+DB_NAME=__DB_NAME__ \
+DB_USER=__DB_USER__ \
+DB_PASSWORD=__DB_PASSWORD__ \
+DB_HOST=__DB_HOST__ \
+DB_PORT=__DB_PORT__ \
+WP_CLI_CACHE_DIR=${VAR}/cache/wp-cli \
+WP_CLI_PACKAGES_DIR=${VAR}/wp-cli/packages \
+WP_CLI_SUPPRESS_GLOBAL_PARAMS="true" \
+${OPT}/php/bin/php ${BIN}/wp-cli.phar "${ARGS[@]}"

@@ -49,6 +49,7 @@ WEB="$( cd -P "$DIR/web" && pwd )"
 USER="$(whoami)"
 LOG="${DIR}/error.log"
 RUN_SCRIPT="${BIN}/run-rhel.sh"
+WP_CLI_SCRIPT="${BIN}/wp"
 SERVICE_RUN_SCRIPT="${BIN}/run-rhel-service.sh"
 PHP_FPM_CONF="${ETC}/php-fpm.d/php-fpm.conf"
 PHP_INI="${ETC}/php/php.ini"
@@ -312,8 +313,30 @@ if  [ "${CORRECT}" == "y" ]; then
     sed -i -e s/__GOOGLE_OAUTH_CLIENT_SECRET__/"${GOOGLE_OAUTH_CLIENT_SECRET}"/g ${RUN_SCRIPT}
     sed -i -e s/__SSL__/"${SSL}"/g ${RUN_SCRIPT}
     sed -i -e s/__DEBUG__/"${DEBUG}"/g ${RUN_SCRIPT}
-    chmod +x ${RUN_SCRIPT}
+    chmod 700 ${RUN_SCRIPT}
 
+    ##============================
+    ## Template WP-CLI Script
+    ##============================
+
+    if [ -f ${WP_CLI_SCRIPT} ]; then
+       rm ${WP_CLI_SCRIPT}
+    fi
+    cp ${BIN}/wp.sh.dist ${WP_CLI_SCRIPT}
+
+    sed -i -e s/__SITE_NAME__/"${SITE_NAME}"/g ${WP_CLI_SCRIPT}
+    sed -i -e s/__PORT__/"${PORT}"/g ${WP_CLI_SCRIPT}
+    sed -i -e s/__DB_HOST__/"${DB_HOST}"/g ${WP_CLI_SCRIPT}
+    sed -i -e s/__DB_NAME__/"${DB_NAME}"/g ${WP_CLI_SCRIPT}
+    sed -i -e s/__DB_USER__/"${DB_USER}"/g ${WP_CLI_SCRIPT}
+    sed -i -e s/__DB_PASSWORD__/"${DB_PASSWORD}"/g ${WP_CLI_SCRIPT}
+    sed -i -e s/__REDIS_HOST__/"${REDIS_HOST}"/g ${WP_CLI_SCRIPT}
+    sed -i -e s/__DB_PORT__/"${DB_PORT}"/g ${WP_CLI_SCRIPT}
+    sed -i -e s/__GOOGLE_OAUTH_CLIENT_ID__/"${GOOGLE_OAUTH_CLIENT_ID}"/g ${WP_CLI_SCRIPT}
+    sed -i -e s/__GOOGLE_OAUTH_CLIENT_SECRET__/"${GOOGLE_OAUTH_CLIENT_SECRET}"/g ${WP_CLI_SCRIPT}
+    sed -i -e s/__SSL__/"${SSL}"/g ${WP_CLI_SCRIPT}
+    sed -i -e s/__DEBUG__/"${DEBUG}"/g ${WP_CLI_SCRIPT}
+    chmod 700 ${WP_CLI_SCRIPT}
 
     ##==============================
     ## Template the ssl-params.conf

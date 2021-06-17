@@ -145,10 +145,18 @@ curl -o ${OPT}/wordpress.tar.gz https://wordpress.org/latest.tar.gz
 tar -xf ${OPT}/wordpress.tar.gz -C ${OPT}/ --exclude="wp-content"
 cp -r ${OPT}/wordpress/* ${WEB}/
 
+# Download Wordpress CLI
+if [ -f "${BIN}/wp-cli.phar" ]; then
+  rm ${BIN}/wp-cli.phar
+fi
+curl -o ${BIN}/wp-cli.phar https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli.phar
+chmod +x ${BIN}/wp-cli.phar
+
 # Cleanup
+rm -rf ${OPT}/php-*/
 rm ${OPT}/wordpress.tar.gz
 rm -rf ${OPT}/wordpress
 rm -rf ${OPT}/openresty-*/
-rm -rf ${OPT}/php-*/
 
+# Run the configuration
 ${BIN}/configure-amazon.sh
