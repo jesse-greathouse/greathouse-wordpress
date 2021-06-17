@@ -34,6 +34,7 @@ get-pip.py
 /bin/*
 !bin/bust-opcache.sh
 !bin/generate-diffie-hellman.pl
+!bin/install-pear.sh
 !bin/install-amazon.sh
 !bin/install-osx.sh
 !bin/install-ubuntu.sh
@@ -55,6 +56,7 @@ get-pip.py
 # etc
 etc/php-fpm.conf.default
 etc/php/php.ini
+etc/php/hidden.ini
 etc/php-fpm.d/php-fpm.conf
 etc/php-fpm.d/www.conf.default
 etc/nginx/nginx.conf
@@ -80,6 +82,7 @@ opt/wordpress*/*
 opt/php*/*
 opt/openresty*/*
 opt/MacOSX*/*
+opt/pear*/*
 
 # cache and logs
 build-event.log
@@ -122,6 +125,8 @@ supervisord.pid
 # web
 web/wp-admin/
 web/wp-includes/
+web/wp-content/uploads/
+!web/wp-content/uploads/.gitkeep
 web/index.php
 web/license.txt
 web/readme.html

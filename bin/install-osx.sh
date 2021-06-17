@@ -50,7 +50,7 @@ brew upgrade autoconf
 
 brew install intltool autoconf automake python@3.8 gcc perl pcre \
   curl-openssl libiconv pkg-config openssl@1.1 mysql-client oniguruma \
-  pcre2 libxml2 icu4c imagemagick mysql libsodium libzip
+  pcre2 libxml2 icu4c imagemagick mysql libsodium libzip glib
 
 #install authbind -- allows a non root user to allow a program to bind to a port under 1025
 cd ${OPT}
@@ -97,53 +97,61 @@ make install
 
 cd ${DIR}
 
-# Compile and Install PHP
+Compile and Install PHP
 tar -xf ${OPT}/php-*.tar.gz -C ${OPT}/
 cd ${OPT}/php-*/
 
 env PKG_CONFIG_PATH=/usr/local/opt/openssl/lib/pkgconfig:/usr/local/opt/libxml2/lib/pkgconfig:/usr/local/opt/icu4c/lib/pkgconfig:/usr/local/opt/pcre2/lib/pkgconfig \
-      ./configure \
-      --prefix=${OPT}/php \
-      --sysconfdir=${ETC} \
-      --with-config-file-path=${ETC}/php \
-      --with-config-file-scan-dir=${ETC}/php/conf.d \
-      --enable-opcache \
-      --enable-fpm \
-      --enable-dom \
-      --enable-exif \
-      --enable-fileinfo \
-      --enable-hash \
-      --enable-imagick \
-      --enable-json \
-      --enable-mbstring \
-      --enable-bcmath \
-      --enable-intl \
-      --enable-ftp \
-      --enable-mysqli \
-      --without-sqlite3 \
-      --without-pdo-sqlite \
-      --with-ssh2 \
-      --with-mcrypt \
-      --with-libxml \
-      --with-simplexml \
-      --with-xmlreader \
-      --with-xsl \
-      --with-xmlrpc \
-      --with-zlib \
-      --with-curl \
-      --with-webp \
-      --with-openssl \
-      --with-zip=/usr/local/opt/libzip \
-      --with-sodium=/usr/local/opt/sodium \
-      --with-mysqli=/usr/local/bin/mysql_config \
-      --with-pdo-mysql=mysqlnd \
-      --with-mysql-sock=/tmp/mysql.sock \
-      --with-pcre-dir=/usr/local/opt/pcre2 \
-      --with-pcre-regex=/usr/local/opt/pcre2 \
-      --with-imagick=/usr/local/opt/imagemagick \
-      --with-iconv=/usr/local/opt/libiconv
+  ./configure \
+    --prefix=${OPT}/php \
+    --sysconfdir=${ETC} \
+    --with-config-file-path=${ETC}/php \
+    --with-config-file-scan-dir=${ETC}/php/conf.d \
+    --enable-opcache \
+    --enable-fpm \
+    --enable-dom \
+    --enable-exif \
+    --enable-fileinfo \
+    --enable-json \
+    --enable-mbstring \
+    --enable-bcmath \
+    --enable-intl \
+    --enable-ftp \
+    --without-sqlite3 \
+    --without-pdo-sqlite \
+    --with-libxml \
+    --with-xsl \
+    --with-xmlrpc \
+    --with-zlib \
+    --with-curl \
+    --with-webp \
+    --with-openssl \
+    --with-zip=/usr/local/opt/libzip \
+    --with-sodium=/usr/local/opt/sodium \
+    --with-mysqli=/usr/local/bin/mysql_config \
+    --with-pdo-mysql=mysqlnd \
+    --with-mysql-sock=/tmp/mysql.sock \
+    --with-iconv=/usr/local/opt/libiconv
 make
 make install
+
+# Install Pear and ImageMagick extension
+# If php.ini exists, hide it before pear installs
+if [ -f "${ETC}/php/php.ini" ]; then
+  mv ${ETC}/php/php.ini ${ETC}/php/hidden.ini
+fi
+
+# Use expect to install Pear non-interactively
+${BIN}/install-pear.sh ${OPT}
+
+#replace the php.ini file
+if [ -f "${ETC}/hidden.ini" ]; then
+  mv ${ETC}/php/hidden.ini ${ETC}/php/php.ini
+fi
+
+# Build imagick extension with pecl
+export PATH="${OPT}/php/bin:${PATH}"
+${OPT}/pear/bin/pecl install imagick
 
 cd ${DIR}
 
@@ -153,10 +161,10 @@ tar -xf ${OPT}/wordpress.tar.gz -C ${OPT}/ --exclude="wp-content"
 cp -r ${OPT}/wordpress/* ${WEB}/
 
 # Cleanup
+rm -rf ${OPT}/php-*/
 rm ${OPT}/wordpress.tar.gz
 rm -rf ${OPT}/wordpress
 rm -rf ${OPT}/openresty-*/
-rm -rf ${OPT}/php-*/
 rm -rf ${OPT}/MacOSX-*/
 
 # Run the configuration

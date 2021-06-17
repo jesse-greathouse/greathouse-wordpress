@@ -45,24 +45,21 @@ WEB="$( cd -P "$DIR/web" && pwd )"
 
 # install dependencies
 sudo yum -y update && sudo yum -y install \
-  centos-release-scl intltool autoconf automake python3 python3-pip gcc perl pcre \
+  gcc gcc-c++ centos-release-scl intltool autoconf automake python3 python3-pip gcc perl pcre \
   git-core curl libcurl-devel pkgconfig openssl openssl-devel mariadb-client mariadb-devel \
-  pcre2 libxml2 libicu ImageMagick-devel ImageMagick libzip ncurses-devel
+  pcre2 libxml2 libxml2-devel libicu-devel ImageMagick-devel ImageMagick libzip ncurses-devel glib2-devel
 
 # install oniguruma
-curl -o ${OPT}/oniguruma-6.8.2-1.el7.x86_64.rpm https://download-ib01.fedoraproject.org/pub/epel/7/x86_64/Packages/o/oniguruma-6.8.2-1.el7.x86_64.rpm
-rpm ${OPT}/oniguruma-6.8.2-1.el7.x86_64.rpm
-yum -y install oniguruma
-rm ${OPT}/oniguruma-6.8.2-1.el7.x86_64.rpm
+curl -o ${OPT}/oniguruma-devel-6.8.2-1.el7.x86_64.rpm https://download-ib01.fedoraproject.org/pub/epel/7/x86_64/Packages/o/oniguruma-devel-6.8.2-1.el7.x86_64.rpm
+sudo rpm -ivh ${OPT}/oniguruma-devel-6.8.2-1.el7.x86_64.rpm
+rm ${OPT}/oniguruma-devel-6.8.2-1.el7.x86_64.rpm
 
 # install Sodium
-curl -o ${OPT}/libsodium-1.0.18-1.el7.x86_64.rpm https://download-ib01.fedoraproject.org/pub/epel/7/x86_64/Packages/l/libsodium-1.0.18-1.el7.x86_64.rpm
-rpm ${OPT}/libsodium-1.0.18-1.el7.x86_64.rpm
-yum -y install libsodium
-rm ${OPT}/libsodium-1.0.18-1.el7.x86_64.rpm
+curl -o ${OPT}/libsodium-devel-1.0.18-1.el7.x86_64.rpm https://download-ib01.fedoraproject.org/pub/epel/7/x86_64/Packages/l/libsodium-devel-1.0.18-1.el7.x86_64.rpm
+sudo rpm -ivh ${OPT}/libsodium-devel-1.0.18-1.el7.x86_64.rpm
+rm ${OPT}/libsodium-devel-1.0.18-1.el7.x86_64.rpm
 
-scl enable python3 bash
-pip install supervisor
+sudo pip3 install supervisor
 
 # Compile and Install Openresty
 tar -xzf ${OPT}/openresty-*.tar.gz -C ${OPT}/
@@ -99,21 +96,14 @@ cd ${OPT}/php-*/
   --enable-dom \
   --enable-exif \
   --enable-fileinfo \
-  --enable-hash \
-  --enable-imagick \
   --enable-json \
   --enable-mbstring \
   --enable-bcmath \
   --enable-intl \
   --enable-ftp \
-  --enable-mysqli \
   --without-sqlite3 \
   --without-pdo-sqlite \
-  --with-ssh2 \
-  --with-mcrypt \
   --with-libxml \
-  --with-simplexml \
-  --with-xmlreader \
   --with-xsl \
   --with-xmlrpc \
   --with-zlib \
@@ -125,12 +115,27 @@ cd ${OPT}/php-*/
   --with-mysqli \
   --with-pdo-mysql \
   --with-mysql-sock \
-  --with-pcre-dir \
-  --with-pcre-regex \
-  --with-imagick \
   --with-iconv
 make
 make install
+
+# Install Pear and ImageMagick extension
+# If php.ini exists, hide it before pear installs
+if [ -f "${ETC}/php/php.ini" ]; then
+  mv ${ETC}/php/php.ini ${ETC}/php/hidden.ini
+fi
+
+# Use expect to install Pear non-interactively
+${BIN}/install-pear.sh ${OPT}
+
+#replace the php.ini file
+if [ -f "${ETC}/hidden.ini" ]; then
+  mv ${ETC}/php/hidden.ini ${ETC}/php/php.ini
+fi
+
+# Build imagick extension with pecl
+export PATH="${OPT}/php/bin:${PATH}"
+${OPT}/pear/bin/pecl install imagick
 
 cd ${DIR}
 

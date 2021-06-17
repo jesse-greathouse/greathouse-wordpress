@@ -45,9 +45,9 @@ WEB="$( cd -P "$DIR/web" && pwd )"
 
 #install dependencies
 sudo apt-get update && sudo apt-get install -y \
-  supervisor authbind build-essential intltool autoconf automake gcc perl curl pkg-config \
-  libpcre++-dev libcurl4 libcurl4-openssl-dev openssl libssl-dev libmysqlclient-dev mysql-client libxslt1-dev \
-  libpcre2-dev libxml2 libxml2-dev libicu-dev libmagick++-dev imagemagick libzip-dev libonig-dev libsodium-dev
+  supervisor authbind openssl build-essential intltool autoconf automake gcc perl curl pkg-config \
+  mysql-client imagemagick libpcre++-dev libcurl4 libcurl4-openssl-dev libmagickwand-dev libssl-dev libxslt1-dev \
+  libmysqlclient-dev libpcre2-dev libxml2 libxml2-dev libicu-dev libmagick++-dev libzip-dev libonig-dev libsodium-dev libglib2.0-dev
 
 # Compile and Install Openresty
 tar -xzf ${OPT}/openresty-*.tar.gz -C ${OPT}/
@@ -84,21 +84,14 @@ cd ${OPT}/php-*/
   --enable-dom \
   --enable-exif \
   --enable-fileinfo \
-  --enable-hash \
-  --enable-imagick \
   --enable-json \
   --enable-mbstring \
   --enable-bcmath \
   --enable-intl \
   --enable-ftp \
-  --enable-mysqli \
   --without-sqlite3 \
   --without-pdo-sqlite \
-  --with-ssh2 \
-  --with-mcrypt \
   --with-libxml \
-  --with-simplexml \
-  --with-xmlreader \
   --with-xsl \
   --with-xmlrpc \
   --with-zlib \
@@ -110,12 +103,27 @@ cd ${OPT}/php-*/
   --with-mysqli \
   --with-pdo-mysql \
   --with-mysql-sock \
-  --with-pcre-dir \
-  --with-pcre-regex \
-  --with-imagick \
   --with-iconv
 make
 make install
+
+# Install Pear and ImageMagick extension
+# If php.ini exists, hide it before pear installs
+if [ -f "${ETC}/php/php.ini" ]; then
+  mv ${ETC}/php/php.ini ${ETC}/php/hidden.ini
+fi
+
+# Use expect to install Pear non-interactively
+${BIN}/install-pear.sh ${OPT}
+
+#replace the php.ini file
+if [ -f "${ETC}/hidden.ini" ]; then
+  mv ${ETC}/php/hidden.ini ${ETC}/php/php.ini
+fi
+
+# Build imagick extension with pecl
+export PATH="${OPT}/php/bin:${PATH}"
+${OPT}/pear/bin/pecl install imagick
 
 cd ${DIR}
 

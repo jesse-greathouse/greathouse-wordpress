@@ -47,7 +47,7 @@ WEB="$( cd -P "$DIR/web" && pwd )"
 sudo yum -y update && sudo yum -y install \
   centos-release-scl intltool autoconf automake python3 python3-pip gcc perl pcre \
   git-core curl libcurl-devel pkgconfig openssl openssl-devel mariadb-client mariadb-devel \
-  pcre2 libxml2 libicu ImageMagick-devel ImageMagick libzip ncurses-devel oniguruma
+  pcre2 libxml2 libicu ImageMagick-devel ImageMagick libzip ncurses-devel oniguruma glib2-devel
 
 # install Sodium
 curl -o ${OPT}/libsodium-1.0.18-1.el7.x86_64.rpm https://download-ib01.fedoraproject.org/pub/epel/7/x86_64/Packages/l/libsodium-1.0.18-1.el7.x86_64.rpm
@@ -92,21 +92,14 @@ cd ${OPT}/php-*/
   --enable-dom \
   --enable-exif \
   --enable-fileinfo \
-  --enable-hash \
-  --enable-imagick \
   --enable-json \
   --enable-mbstring \
   --enable-bcmath \
   --enable-intl \
   --enable-ftp \
-  --enable-mysqli \
   --without-sqlite3 \
   --without-pdo-sqlite \
-  --with-ssh2 \
-  --with-mcrypt \
   --with-libxml \
-  --with-simplexml \
-  --with-xmlreader \
   --with-xsl \
   --with-xmlrpc \
   --with-zlib \
@@ -118,12 +111,27 @@ cd ${OPT}/php-*/
   --with-mysqli \
   --with-pdo-mysql \
   --with-mysql-sock \
-  --with-pcre-dir \
-  --with-pcre-regex \
-  --with-imagick \
   --with-iconv
 make
 make install
+
+# Install Pear and ImageMagick extension
+# If php.ini exists, hide it before pear installs
+if [ -f "${ETC}/php/php.ini" ]; then
+  mv ${ETC}/php/php.ini ${ETC}/php/hidden.ini
+fi
+
+# Use expect to install Pear non-interactively
+${BIN}/install-pear.sh ${OPT}
+
+#replace the php.ini file
+if [ -f "${ETC}/hidden.ini" ]; then
+  mv ${ETC}/php/hidden.ini ${ETC}/php/php.ini
+fi
+
+# Build imagick extension with pecl
+export PATH="${OPT}/php/bin:${PATH}"
+${OPT}/pear/bin/pecl install imagick
 
 cd ${DIR}
 
