@@ -47,7 +47,7 @@ sudo yum-config-manager --enable epel
 
 # install dependencies
 sudo yum -y update && sudo yum -y install \
-  gcc gcc-c++ intltool autoconf autoconf python3.8 python3-pip gcc perl pcre \
+  gcc gcc-c++ intltool autoconf autoconf python3.8 python3-pip gcc perl pcre expect \
   git-core curl libcurl-devel pkgconfig openssl openssl-devel mariadb-client mariadb-devel libxslt-devel \
   pcre2 ibxml2 ibxml2-devel libicu-devel ImageMagick-devel ImageMagick libzip ncurses-devel oniguruma-devel glib2-devel libzip-devel
 

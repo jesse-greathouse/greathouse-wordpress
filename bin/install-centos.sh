@@ -45,7 +45,7 @@ WEB="$( cd -P "$DIR/web" && pwd )"
 
 # install dependencies
 sudo yum -y update && sudo yum -y install \
-  gcc gcc-c++ centos-release-scl intltool autoconf automake python3 python3-pip gcc perl pcre \
+  gcc gcc-c++ centos-release-scl intltool autoconf automake python3 python3-pip gcc perl pcre expect \
   git-core curl libcurl-devel pkgconfig openssl openssl-devel mariadb-client mariadb-devel libxslt-devel \
   pcre2 libxml2 libxml2-devel libicu-devel ImageMagick-devel ImageMagick libzip ncurses-devel glib2-devel
 
