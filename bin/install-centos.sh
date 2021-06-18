@@ -64,7 +64,7 @@ curl -o ${OPT}/oniguruma-devel-6.8.2-1.el7.x86_64.rpm https://download-ib01.fedo
 sudo rpm -ivh ${OPT}/oniguruma-devel-6.8.2-1.el7.x86_64.rpm
 rm ${OPT}/oniguruma-devel-6.8.2-1.el7.x86_64.rpm
 
-# install Sodium
+# install Sodium-devel
 curl -o ${OPT}/libsodium-devel-1.0.18-1.el7.x86_64.rpm https://download-ib01.fedoraproject.org/pub/epel/7/x86_64/Packages/l/libsodium-devel-1.0.18-1.el7.x86_64.rpm
 sudo rpm -ivh ${OPT}/libsodium-devel-1.0.18-1.el7.x86_64.rpm
 rm ${OPT}/libsodium-devel-1.0.18-1.el7.x86_64.rpm
