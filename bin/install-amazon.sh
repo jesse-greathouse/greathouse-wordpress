@@ -58,7 +58,7 @@ yum -y install libsodium
 rm ${OPT}/libsodium-1.0.18-1.el7.x86_64.rpm
 
 sudo amazon-linux-extras enable python3.8
-pip install supervisor
+pip3 install supervisor
 
 export PATH=$PATH:/usr/local/mysql/bin
 
