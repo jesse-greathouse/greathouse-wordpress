@@ -56,6 +56,11 @@ curl -o ${OPT}/libsodium-1.0.18-1.el7.x86_64.rpm https://download-ib01.fedorapro
 sudo rpm -ivh ${OPT}/libsodium-1.0.18-1.el7.x86_64.rpm
 rm ${OPT}/libsodium-1.0.18-1.el7.x86_64.rpm
 
+# install Sodium-devel
+curl -o ${OPT}/libsodium-devel-1.0.18-1.el7.x86_64.rpm https://download-ib01.fedoraproject.org/pub/epel/7/x86_64/Packages/l/libsodium-devel-1.0.18-1.el7.x86_64.rpm
+sudo rpm -ivh ${OPT}/libsodium-devel-1.0.18-1.el7.x86_64.rpm
+rm ${OPT}/libsodium-devel-1.0.18-1.el7.x86_64.rpm
+
 sudo amazon-linux-extras enable python3.8
 pip3 install supervisor
 
@@ -68,9 +73,7 @@ tar -xzf ${OPT}/openresty-*.tar.gz -C ${OPT}/
 sed -i -e s/"    NULL, NULL, NULL, NULL, NULL, NULL, NULL, \"\\\\\\\\\/\","/"    NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL,"/g ${OPT}/openresty-*/bundle/lua-cjson-2.1.0.7/lua_cjson.c
 
 cd ${OPT}/openresty-*/
-./configure --with-cc-opt="-I/usr/local/include -I/usr/local/opt/openssl/include" \
-            --with-ld-opt="-L/usr/local/lib -L/usr/local/opt/openssl/lib" \
-            --prefix=${OPT}/openresty \
+./configure --prefix=${OPT}/openresty \
             --with-pcre-jit \
             --with-ipv6 \
             --with-http_iconv_module \
