@@ -47,7 +47,7 @@ WEB="$( cd -P "$DIR/web" && pwd )"
 sudo yum -y update && sudo yum -y install \
   gcc gcc-c++ centos-release-scl intltool autoconf automake python3 python3-pip gcc perl pcre \
   git-core curl libcurl-devel pkgconfig openssl openssl-devel mariadb-client mariadb-devel libxslt-devel \
-  pcre2 libxml2 libxml2-devel libicu-devel ImageMagick-devel ImageMagick libzip ncurses-devel glib2-devel
+  pcre2 libxml2 libxml2-devel libicu-devel ImageMagick-devel ImageMagick libzip ncurses-devel glib2-devel libzip-devel
 
 # install oniguruma
 curl -o ${OPT}/oniguruma-devel-6.8.2-1.el7.x86_64.rpm https://download-ib01.fedoraproject.org/pub/epel/7/x86_64/Packages/o/oniguruma-devel-6.8.2-1.el7.x86_64.rpm
