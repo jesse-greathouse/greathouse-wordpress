@@ -53,8 +53,7 @@ sudo yum -y update && sudo yum -y install \
 
 # install Sodium
 curl -o ${OPT}/libsodium-1.0.18-1.el7.x86_64.rpm https://download-ib01.fedoraproject.org/pub/epel/7/x86_64/Packages/l/libsodium-1.0.18-1.el7.x86_64.rpm
-rpm ${OPT}/libsodium-1.0.18-1.el7.x86_64.rpm
-yum -y install libsodium
+sudo rpm -ivh ${OPT}/libsodium-1.0.18-1.el7.x86_64.rpm
 rm ${OPT}/libsodium-1.0.18-1.el7.x86_64.rpm
 
 sudo amazon-linux-extras enable python3.8

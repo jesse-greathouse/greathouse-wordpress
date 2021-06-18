@@ -47,7 +47,7 @@ WEB="$( cd -P "$DIR/web" && pwd )"
 sudo yum -y update && sudo yum -y install \
   gcc gcc-c++ centos-release-scl intltool autoconf automake python3 python3-pip gcc perl pcre \
   git-core curl libcurl-devel pkgconfig openssl openssl-devel mariadb-client mariadb-devel libxslt-devel \
-  pcre2 libxml2 libxml2-devel libicu-devel ImageMagick-devel ImageMagick libzip ncurses-devel glib2-devel
+  pcre2 libxml2 libxml2-devel libicu-devel ImageMagick-devel ImageMagick libzip ncurses-devel glib2-devel libzip
 
 # install libzip-devel
 curl -o ${OPT}/libzip-devel-0.11.2-6.el7.psychotic.x86_64.rpm http://packages.psychotic.ninja/7/plus/x86_64/RPMS/libzip-devel-0.11.2-6.el7.psychotic.x86_64.rpm
