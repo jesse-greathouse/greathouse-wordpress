@@ -52,13 +52,12 @@ tar -xzf ${OPT}/openresty-*.tar.gz -C ${OPT}/
 sed -i -e s/"    NULL, NULL, NULL, NULL, NULL, NULL, NULL, \"\\\\\\\\\/\","/"    NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL,"/g ${OPT}/openresty-*/bundle/lua-cjson-2.1.0.7/lua_cjson.c
 
 cd ${OPT}/openresty-*/
-./configure --with-cc-opt="-I/usr/local/include -I/usr/local/opt/openssl/include" \
-            --with-ld-opt="-L/usr/local/lib -L/usr/local/opt/openssl/lib" \
-            --prefix=${OPT}/openresty \
+./configure --prefix=${OPT}/openresty \
             --with-pcre-jit \
             --with-ipv6 \
             --with-http_iconv_module \
             --with-http_realip_module \
+            --with-http_ssl_module \
             -j2 && \
 make
 make install
@@ -96,9 +95,8 @@ cd ${OPT}/php-*/
   --with-zip \
   --with-sodium \
   --with-mysqli \
-  --with-pdo-mysql=mysqlnd \
+  --with-pdo-mysql \
   --with-mysql-sock \
-  --with-pcre-regex \
   --with-iconv
 make
 make install
@@ -119,7 +117,7 @@ fi
 
 # Build imagick extension with pecl
 export PATH="${OPT}/php/bin:${PATH}"
-${OPT}/pear/bin/pecl install imagick
+printf "\n" | ${OPT}/pear/bin/pecl install imagick
 
 cd ${DIR}
 

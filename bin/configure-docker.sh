@@ -38,6 +38,12 @@ while [ -h "$SOURCE" ]; do # resolve $SOURCE until the file is no longer a symli
   fi
 done
 RBIN="$( dirname "$SOURCE" )"
+DOCKER_USER="daemon"
+DOCKER_DIR="/app"
+DOCKER_ETC="${DOCKER_DIR}/etc"
+DOCKER_LOG="${DOCKER_DIR}/log"
+DOCKER_WEB="${DOCKER_DIR}/web"
+DOCKER_VAR="${DOCKER_DIR}/var"
 BIN="$( cd -P "$( dirname "$SOURCE" )" && pwd )"
 DIR="$( cd -P "$BIN/../" && pwd )"
 ETC="$( cd -P "$DIR/etc" && pwd )"
@@ -49,15 +55,16 @@ WEB="$( cd -P "$DIR/web" && pwd )"
 USER="$(whoami)"
 LOG="${DIR}/error.log"
 RUN_SCRIPT="${BIN}/run-docker.sh"
-WP_CLI_SCRIPT="${BIN}/wp"
+WP_CLI_SCRIPT="${BIN}/docker-wp"
 SERVICE_RUN_SCRIPT="${BIN}/run-docker-service.sh"
-PHP_FPM_CONF="${ETC}/php-fpm.d/php-fpm.conf"
-PHP_INI="${ETC}/php/php.ini"
-NGINX_CONF="${ETC}/nginx/nginx.conf"
-SSL_CONF="${ETC}/ssl/openssl.cnf"
-SSL_PARAMS_CONF="${ETC}/nginx/ssl-params.conf"
-FORCE_SSL_CONF="${ETC}/nginx/force-ssl.conf"
-KEYS_AND_SALTS_FILE="${VAR}/keys/wordpress-keys-and-salts.php"
+STOP_SCRIPT="${BIN}/stop-docker.sh"
+PHP_FPM_CONF="${ETC}/php-fpm.d/php-fpm.docker.conf"
+PHP_INI="${ETC}/php/php.docker.ini"
+NGINX_CONF="${ETC}/nginx/nginx.docker.conf"
+SSL_CONF="${ETC}/ssl/openssl.docker.cnf"
+SSL_PARAMS_CONF="${ETC}/nginx/ssl-params.docker.conf"
+FORCE_SSL_CONF="${ETC}/nginx/force-ssl.docker.conf"
+KEYS_AND_SALTS_FILE="${VAR}/keys/wordpress-keys-and-salts.docker.php"
 OPCACHE_VALIDATE_TIMESTAMPS=1
 
 # Check to see if the keys and salts file exists
@@ -276,9 +283,9 @@ if  [ "${CORRECT}" == "y" ]; then
        rm ${PHP_INI}
     fi
     cp ${ETC}/php/php.dist.ini ${PHP_INI}
-    sed -i -e "s __DIR__ $DIR g" ${PHP_INI}
-    sed -i -e s/__SITE_NAME__/"${SITE_NAME}"/g ${PHP_INI}
-    sed -i -e s/__OPCACHE_VALIDATE_TIMESTAMPS__/"${OPCACHE_VALIDATE_TIMESTAMPS}"/g ${PHP_INI}
+    sed -i '' "s __DIR__ $DOCKER_DIR g" ${PHP_INI}
+    sed -i '' s/__SITE_NAME__/"${SITE_NAME}"/g ${PHP_INI}
+    sed -i '' s/__OPCACHE_VALIDATE_TIMESTAMPS__/"${OPCACHE_VALIDATE_TIMESTAMPS}"/g ${PHP_INI}
 
     ##============================
     ## Template PHP-FPM CONF
@@ -287,9 +294,9 @@ if  [ "${CORRECT}" == "y" ]; then
        rm ${PHP_FPM_CONF}
     fi
     cp ${ETC}/php-fpm.d/php-fpm.dist.conf ${PHP_FPM_CONF}
-    sed -i -e "s __DIR__ $DIR g" ${PHP_FPM_CONF}
-    sed -i -e s/__SITE_NAME__/"${SITE_NAME}"/g ${PHP_FPM_CONF}
-    sed -i -e s/__USER__/"${USER}"/g ${PHP_FPM_CONF}
+    sed -i '' "s __DIR__ $DOCKER_DIR g" ${PHP_FPM_CONF}
+    sed -i '' s/__SITE_NAME__/"${SITE_NAME}"/g ${PHP_FPM_CONF}
+    sed -i '' s/__USER__/"${DOCKER_USER}"/g ${PHP_FPM_CONF}
 
     ##============================
     ## Template SSL Config
@@ -299,7 +306,7 @@ if  [ "${CORRECT}" == "y" ]; then
        rm ${SSL_CONF}
     fi
     cp ${ETC}/ssl/openssl.dist.cnf ${SSL_CONF}
-    sed -i -e "s __ETC__ $ETC g" ${SSL_CONF}
+    sed -i '' "s __ETC__ $DOCKER_ETC g" ${SSL_CONF}
 
     ##============================
     ## Template Stop Script
@@ -310,7 +317,7 @@ if  [ "${CORRECT}" == "y" ]; then
     fi
     cp ${BIN}/stop-docker.sh.dist ${STOP_SCRIPT}
 
-    sed -i -e s/__CONTAINER_NAME__/"${SITE_NAME}"/g ${STOP_SCRIPT}
+    sed -i '' s/__CONTAINER_NAME__/"${SITE_NAME}"/g ${STOP_SCRIPT}
 
 
     ##============================
@@ -322,19 +329,19 @@ if  [ "${CORRECT}" == "y" ]; then
     fi
     cp ${BIN}/run-docker.sh.dist ${RUN_SCRIPT}
 
-    sed -i -e s/__SITE_NAME__/"${SITE_NAME}"/g ${RUN_SCRIPT}
-    sed -i -e s/__PORT__/"${PORT}"/g ${RUN_SCRIPT}
-    sed -i -e s/__DB_HOST__/"${DB_HOST}"/g ${RUN_SCRIPT}
-    sed -i -e s/__DB_NAME__/"${DB_NAME}"/g ${RUN_SCRIPT}
-    sed -i -e s/__DB_USER__/"${DB_USER}"/g ${RUN_SCRIPT}
-    sed -i -e s/__DB_PASSWORD__/"${DB_PASSWORD}"/g ${RUN_SCRIPT}
-    sed -i -e s/__REDIS_HOST__/"${REDIS_HOST}"/g ${RUN_SCRIPT}
-    sed -i -e s/__DB_PORT__/"${DB_PORT}"/g ${RUN_SCRIPT}
-    sed -i -e s/__SSL__/"${SSL}"/g ${RUN_SCRIPT}
-    sed -i -e s/__RESTART_POLICY__/"${RESTART_POLICY}"/g ${RUN_SCRIPT}
-    sed -i -e s/__GOOGLE_OAUTH_CLIENT_ID__/"${GOOGLE_OAUTH_CLIENT_ID}"/g ${RUN_SCRIPT}
-    sed -i -e s/__GOOGLE_OAUTH_CLIENT_SECRET__/"${GOOGLE_OAUTH_CLIENT_SECRET}"/g ${RUN_SCRIPT}
-    sed -i -e s/__DEBUG__/"${DEBUG}"/g ${RUN_SCRIPT}
+    sed -i '' s/__SITE_NAME__/"${SITE_NAME}"/g ${RUN_SCRIPT}
+    sed -i '' s/__PORT__/"${PORT}"/g ${RUN_SCRIPT}
+    sed -i '' s/__DB_HOST__/"${DB_HOST}"/g ${RUN_SCRIPT}
+    sed -i '' s/__DB_NAME__/"${DB_NAME}"/g ${RUN_SCRIPT}
+    sed -i '' s/__DB_USER__/"${DB_USER}"/g ${RUN_SCRIPT}
+    sed -i '' s/__DB_PASSWORD__/"${DB_PASSWORD}"/g ${RUN_SCRIPT}
+    sed -i '' s/__REDIS_HOST__/"${REDIS_HOST}"/g ${RUN_SCRIPT}
+    sed -i '' s/__DB_PORT__/"${DB_PORT}"/g ${RUN_SCRIPT}
+    sed -i '' s/__SSL__/"${SSL}"/g ${RUN_SCRIPT}
+    sed -i '' s/__RESTART_POLICY__/"${RESTART_POLICY}"/g ${RUN_SCRIPT}
+    sed -i '' s/__GOOGLE_OAUTH_CLIENT_ID__/"${GOOGLE_OAUTH_CLIENT_ID}"/g ${RUN_SCRIPT}
+    sed -i '' s/__GOOGLE_OAUTH_CLIENT_SECRET__/"${GOOGLE_OAUTH_CLIENT_SECRET}"/g ${RUN_SCRIPT}
+    sed -i '' s/__DEBUG__/"${DEBUG}"/g ${RUN_SCRIPT}
     chmod 700 ${RUN_SCRIPT}
 
     ##============================
@@ -346,18 +353,18 @@ if  [ "${CORRECT}" == "y" ]; then
     fi
     cp ${BIN}/wp.sh.dist ${WP_CLI_SCRIPT}
 
-    sed -i -e s/__SITE_NAME__/"${SITE_NAME}"/g ${WP_CLI_SCRIPT}
-    sed -i -e s/__PORT__/"${PORT}"/g ${WP_CLI_SCRIPT}
-    sed -i -e s/__DB_HOST__/"${DB_HOST}"/g ${WP_CLI_SCRIPT}
-    sed -i -e s/__DB_NAME__/"${DB_NAME}"/g ${WP_CLI_SCRIPT}
-    sed -i -e s/__DB_USER__/"${DB_USER}"/g ${WP_CLI_SCRIPT}
-    sed -i -e s/__DB_PASSWORD__/"${DB_PASSWORD}"/g ${WP_CLI_SCRIPT}
-    sed -i -e s/__REDIS_HOST__/"${REDIS_HOST}"/g ${WP_CLI_SCRIPT}
-    sed -i -e s/__DB_PORT__/"${DB_PORT}"/g ${WP_CLI_SCRIPT}
-    sed -i -e s/__GOOGLE_OAUTH_CLIENT_ID__/"${GOOGLE_OAUTH_CLIENT_ID}"/g ${WP_CLI_SCRIPT}
-    sed -i -e s/__GOOGLE_OAUTH_CLIENT_SECRET__/"${GOOGLE_OAUTH_CLIENT_SECRET}"/g ${WP_CLI_SCRIPT}
-    sed -i -e s/__SSL__/"${SSL}"/g ${WP_CLI_SCRIPT}
-    sed -i -e s/__DEBUG__/"${DEBUG}"/g ${WP_CLI_SCRIPT}
+    sed -i '' s/__SITE_NAME__/"${SITE_NAME}"/g ${WP_CLI_SCRIPT}
+    sed -i '' s/__PORT__/"${PORT}"/g ${WP_CLI_SCRIPT}
+    sed -i '' s/__DB_HOST__/"${DB_HOST}"/g ${WP_CLI_SCRIPT}
+    sed -i '' s/__DB_NAME__/"${DB_NAME}"/g ${WP_CLI_SCRIPT}
+    sed -i '' s/__DB_USER__/"${DB_USER}"/g ${WP_CLI_SCRIPT}
+    sed -i '' s/__DB_PASSWORD__/"${DB_PASSWORD}"/g ${WP_CLI_SCRIPT}
+    sed -i '' s/__REDIS_HOST__/"${REDIS_HOST}"/g ${WP_CLI_SCRIPT}
+    sed -i '' s/__DB_PORT__/"${DB_PORT}"/g ${WP_CLI_SCRIPT}
+    sed -i '' s/__GOOGLE_OAUTH_CLIENT_ID__/"${GOOGLE_OAUTH_CLIENT_ID}"/g ${WP_CLI_SCRIPT}
+    sed -i '' s/__GOOGLE_OAUTH_CLIENT_SECRET__/"${GOOGLE_OAUTH_CLIENT_SECRET}"/g ${WP_CLI_SCRIPT}
+    sed -i '' s/__SSL__/"${SSL}"/g ${WP_CLI_SCRIPT}
+    sed -i '' s/__DEBUG__/"${DEBUG}"/g ${WP_CLI_SCRIPT}
     chmod 700 ${WP_CLI_SCRIPT}
 
     ##==============================
@@ -372,7 +379,7 @@ if  [ "${CORRECT}" == "y" ]; then
     fi
     cp ${ETC}/nginx/ssl-params.dist.conf ${SSL_PARAMS_CONF}
 
-    sed -i -e "s __ETC__ $ETC g" ${SSL_PARAMS_CONF}
+    sed -i '' "s __ETC__ $ETC g" ${SSL_PARAMS_CONF}
 
 
     ##==============================
@@ -383,7 +390,7 @@ if  [ "${CORRECT}" == "y" ]; then
         rm ${FORCE_SSL_CONF}
     fi
     cp ${ETC}/nginx/force-ssl.dist.conf ${FORCE_SSL_CONF}
-    sed -i -e s/__SITE_DOMAINS__/"${SITE_DOMAINS}"/g ${FORCE_SSL_CONF}
+    sed -i '' s/__SITE_DOMAINS__/"${SITE_DOMAINS}"/g ${FORCE_SSL_CONF}
 
 
     ##==============================
@@ -397,21 +404,21 @@ if  [ "${CORRECT}" == "y" ]; then
 
     SESSION_SECRET=`openssl rand -hex 32`
 
-    sed -i -e s/__USER__/"${USER}"/g ${NGINX_CONF}
-    sed -i -e "s __LOG__ $LOG g" ${NGINX_CONF}
-    sed -i -e "s __WEB__ $WEB g" ${NGINX_CONF}
-    sed -i -e "s __VAR__ $VAR g" ${NGINX_CONF}
-    sed -i -e s/__SITE_DOMAINS__/"${SITE_DOMAINS}"/g ${NGINX_CONF}
-    sed -i -e s/__PORT__/"${PORT}"/g ${NGINX_CONF}
-    sed -i -e s/__SESSION_SECRET__/"${SESSION_SECRET}"/g ${NGINX_CONF}
+    sed -i '' s/__USER__/"${DOCKER_USER}"/g ${NGINX_CONF}
+    sed -i '' "s __LOG__ $DOCKER_LOG g" ${NGINX_CONF}
+    sed -i '' "s __WEB__ $DOCKER_WEB g" ${NGINX_CONF}
+    sed -i '' "s __VAR__ $DOCKER_VAR g" ${NGINX_CONF}
+    sed -i '' s/__SITE_DOMAINS__/"${SITE_DOMAINS}"/g ${NGINX_CONF}
+    sed -i '' s/__PORT__/"${PORT}"/g ${NGINX_CONF}
+    sed -i '' s/__SESSION_SECRET__/"${SESSION_SECRET}"/g ${NGINX_CONF}
 
     ## If the "Use https" option was selected, configure the nginx.conf for SSL
     if [ "${SSL}" == "true" ]; then
         SSL_FLAG="ssl"
 
         ## Directives for the SSL cert and key
-        SSL_CERT_LINE="ssl_certificate\\ ${ETC}/ssl/certs/${SITE_NAME}.crt;"
-        SSL_KEY_LINE="ssl_certificate_key\\ ${ETC}/ssl/private/${SITE_NAME}.key;"
+        SSL_CERT_LINE="ssl_certificate\\ ${DOCKER_ETC}/ssl/certs/${SITE_NAME}.crt;"
+        SSL_KEY_LINE="ssl_certificate_key\\ ${DOCKER_ETC}/ssl/private/${SITE_NAME}.key;"
     
         ## If there is a SSL Key Pair, provided by the user, copy them in place
         if  [ "${SSL_PAIR}" == "y" ]; then
@@ -476,10 +483,10 @@ if  [ "${CORRECT}" == "y" ]; then
     fi
 
     ## Template lines will be blank if the "Use https" option was not selected
-    sed -i -e s/__SSL__/${SSL_FLAG}/g ${NGINX_CONF}
-    sed -i -e "s __SSL_CERT_LINE__ $SSL_CERT_LINE g" ${NGINX_CONF}
-    sed -i -e "s __SSL_KEY_LINE__ $SSL_KEY_LINE g" ${NGINX_CONF}
-    sed -i -e "s __INCLUDE_FORCE_SSL__ $INCLUDE_FORCE_SSL g" ${NGINX_CONF}
+    sed -i '' s/__SSL__/${SSL_FLAG}/g ${NGINX_CONF}
+    sed -i '' "s __SSL_CERT_LINE__ $SSL_CERT_LINE g" ${NGINX_CONF}
+    sed -i '' "s __SSL_KEY_LINE__ $SSL_KEY_LINE g" ${NGINX_CONF}
+    sed -i '' "s __INCLUDE_FORCE_SSL__ $INCLUDE_FORCE_SSL g" ${NGINX_CONF}
 
 
     printf "Your run script has been created\n"

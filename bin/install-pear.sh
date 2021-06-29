@@ -2,8 +2,7 @@
 set OPT [lindex $argv 0]
 spawn mkdir $OPT/pear
 expect eof
-spawn cd $OPT/pear
-expect eof
+cd $OPT/pear
 
 spawn curl -O https://pear.php.net/go-pear.phar
 expect eof

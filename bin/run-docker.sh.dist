@@ -63,10 +63,12 @@ printf "+-----------------------------------------------------------------------
 printf "\n"
 printf "\n"
 
-rm -r ${DIR}/error.log
-rm -r ${DIR}/supervisord.log
-touch ${DIR}/supervisord.log
-touch ${DIR}/error.log
+rm -r ${DIR}/error.docker.log
+rm -r ${DIR}/supervisord.docker.log
+rm -r ${VAR}/logs/access.docker.log
+touch ${DIR}/supervisord.docker.log
+touch ${DIR}/error.docker.log
+touch ${VAR}/logs/access.docker.log
 
 docker pull jessegreathouse/greathouse-wordpress
 docker kill __SITE_NAME__
@@ -84,7 +86,6 @@ docker run -d -p __PORT__:3000 \
     -e TMP="/app/tmp" \
     -e VAR="/app/var" \
     -e WEB="/app/web" \
-    -e PERL5LIB="/app/opt/perl/lib/perl5" \
     -e CACHE_DIR="/app/var/cache" \
     -e LOG_DIR="/app/var/logs" \
     -e PORT="__PORT__" \
@@ -96,17 +97,25 @@ docker run -d -p __PORT__:3000 \
     -e DB_PASSWORD="__DB_PASSWORD__" \
     -e DB_HOST="__DB_HOST__" \
     -e DB_PORT="__DB_PORT__" \
-    -v $(pwd)/error.log:/app/error.log \
-    -v $(pwd)/supervisord.log:/app/supervisord.log \
-    -v $(pwd)/etc/nginx/nginx.conf:/app/etc/nginx/nginx.conf \
-    -v $(pwd)/etc/nginx/ssl-params.conf:/app/etc/nginx/ssl-params.conf \
-    -v $(pwd)/etc/nginx/force-ssl.conf:/app/etc/nginx/force-ssl.conf \
-    -v $(pwd)/etc/ssl/certs/dhparam.pem:/app/etc/ssl/certs/dhparam.pem \
-    -v $(pwd)/etc/ssl/certs/__SITE_NAME__.crt:/app/etc/ssl/certs/__SITE_NAME__.crt \
-    -v $(pwd)/etc/ssl/private/__SITE_NAME__.key:/app/etc/ssl/private/__SITE_NAME__.key \
-    -v $(pwd)/etc/ssl/openssl.cnf:/app/etc/ssl/openssl.cnf \
-    -v $(pwd)/src/:/app/src \
-    -v $(pwd)/web/:/app/web \
+    -v $(pwd)/error.docker.log:/app/error.log \
+    -v $(pwd)/supervisord.docker.log:/app/supervisord.log \
+    -v $(pwd)/bin/wp-cli.phar:/app/bin/wp-cli.phar \
+    -v $(pwd)/bin/docker-wp:/app/bin/wp \
+    -v $(pwd)/etc/php-fpm.d/php-fpm.docker.conf:/app/etc/php-fpm.d/php-fpm.conf \
+    -v $(pwd)/etc/php/php.docker.ini:/app/etc/php/php.ini \
+    -v $(pwd)/etc/nginx/force-ssl.docker.conf:/app/etc/nginx/force-ssl.conf \
+    -v $(pwd)/etc/nginx/nginx.docker.conf:/app/etc/nginx/nginx.conf \
+    -v $(pwd)/etc/nginx/rewrites.conf:/app/etc/nginx/rewrites.conf \
+    -v $(pwd)/etc/nginx/ssl-params.docker.conf:/app/etc/nginx/ssl-params.conf \
+    -v $(pwd)/etc/ssl/CA/:/app/etc/ssl/CA \
+    -v $(pwd)/etc/ssl/certs/:/app/etc/ssl/certs \
+    -v $(pwd)/etc/ssl/private/:/app/etc/ssl/private \
+    -v $(pwd)/etc/ssl/openssl.docker.cnf:/app/etc/ssl/openssl.cnf \
+    -v $(pwd)/var/keys/wordpress-keys-and-salts.docker.php:/app/var/keys/wordpress-keys-and-salts.php \
+    -v $(pwd)/var/logs/access.docker.log:/app/var/logs/access.log \
+    -v $(pwd)/web/wp-content/:/app/web/wp-content \
+    -v $(pwd)/web/env.php:/app/web/env.php \
+    -v $(pwd)/web/wp-config.php:/app/web/wp-config.php \
     --restart __RESTART_POLICY__ \
     --name __SITE_NAME__ \
     jessegreathouse/greathouse-wordpress
