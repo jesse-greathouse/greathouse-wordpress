@@ -117,10 +117,6 @@ read PORT
 if  [ "${PORT}" == "" ]; then
     PORT="3000"
 fi
-printf "Enter your Google Oauth Client Id [optional]: "
-read GOOGLE_OAUTH_CLIENT_ID
-printf "Enter your Google Oauth Client Secret [optional]: "
-read GOOGLE_OAUTH_CLIENT_SECRET
 printf "Enter your database host [192.168.0.1]: "
 read DB_HOST
 if  [ "${DB_HOST}" == "" ]; then
@@ -339,8 +335,6 @@ if  [ "${CORRECT}" == "y" ]; then
     sed -i '' s/__DB_PORT__/"${DB_PORT}"/g ${RUN_SCRIPT}
     sed -i '' s/__SSL__/"${SSL}"/g ${RUN_SCRIPT}
     sed -i '' s/__RESTART_POLICY__/"${RESTART_POLICY}"/g ${RUN_SCRIPT}
-    sed -i '' s/__GOOGLE_OAUTH_CLIENT_ID__/"${GOOGLE_OAUTH_CLIENT_ID}"/g ${RUN_SCRIPT}
-    sed -i '' s/__GOOGLE_OAUTH_CLIENT_SECRET__/"${GOOGLE_OAUTH_CLIENT_SECRET}"/g ${RUN_SCRIPT}
     sed -i '' s/__DEBUG__/"${DEBUG}"/g ${RUN_SCRIPT}
     chmod 700 ${RUN_SCRIPT}
 
@@ -361,8 +355,6 @@ if  [ "${CORRECT}" == "y" ]; then
     sed -i '' s/__DB_PASSWORD__/"${DB_PASSWORD}"/g ${WP_CLI_SCRIPT}
     sed -i '' s/__REDIS_HOST__/"${REDIS_HOST}"/g ${WP_CLI_SCRIPT}
     sed -i '' s/__DB_PORT__/"${DB_PORT}"/g ${WP_CLI_SCRIPT}
-    sed -i '' s/__GOOGLE_OAUTH_CLIENT_ID__/"${GOOGLE_OAUTH_CLIENT_ID}"/g ${WP_CLI_SCRIPT}
-    sed -i '' s/__GOOGLE_OAUTH_CLIENT_SECRET__/"${GOOGLE_OAUTH_CLIENT_SECRET}"/g ${WP_CLI_SCRIPT}
     sed -i '' s/__SSL__/"${SSL}"/g ${WP_CLI_SCRIPT}
     sed -i '' s/__DEBUG__/"${DEBUG}"/g ${WP_CLI_SCRIPT}
     chmod 700 ${WP_CLI_SCRIPT}

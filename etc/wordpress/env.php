@@ -65,14 +65,6 @@ if (!defined('LOG_DIR')) {
     define('LOG_DIR', $_ENV['LOG_DIR']);
 }
 
-if (!defined('GOOGLE_OAUTH_CLIENT_ID')) {
-    define('GOOGLE_OAUTH_CLIENT_ID', $_ENV['GOOGLE_OAUTH_CLIENT_ID']);
-}
-
-if (!defined('GOOGLE_OAUTH_CLIENT_SECRET')) {
-    define('GOOGLE_OAUTH_CLIENT_SECRET', $_ENV['GOOGLE_OAUTH_CLIENT_SECRET']);
-}
-
 if (!defined('DEBUG')) {
     define('DEBUG', settype($_ENV['DEBUG'], "boolean"));
 }
