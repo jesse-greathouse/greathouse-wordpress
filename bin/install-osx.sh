@@ -151,7 +151,7 @@ fi
 
 # Build imagick extension with pecl
 export PATH="${OPT}/php/bin:${PATH}"
-${OPT}/pear/bin/pecl install imagick
+printf "/usr/local/opt/imagemagick\n" | ${OPT}/pear/bin/pecl install imagick
 
 cd ${DIR}
 
