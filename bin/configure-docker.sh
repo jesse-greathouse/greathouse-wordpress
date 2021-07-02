@@ -258,6 +258,15 @@ printf "\n"
 if  [ "${CORRECT}" == "y" ]; then
 
     ##============================
+    ## Install Wordpress CLI
+    ##============================
+    if [ -f "${BIN}/wp-cli.phar" ]; then
+    rm ${BIN}/wp-cli.phar
+    fi
+    curl -o ${BIN}/wp-cli.phar https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli.phar
+    chmod +x ${BIN}/wp-cli.phar
+
+    ##============================
     ## Install Wordpress Config
     ##============================
     cp ${ETC}/wordpress/wp-config.php ${WEB}/wp-config.php
