@@ -97,7 +97,7 @@ make install
 
 cd ${DIR}
 
-Compile and Install PHP
+# Compile and Install PHP
 tar -xf ${OPT}/php-*.tar.gz -C ${OPT}/
 cd ${OPT}/php-*/
 
