@@ -54,7 +54,7 @@ This project supports installing on the following operating systems:
 
 If you intend to use Docker, you can skip this step. There is a docker image available which requires no installation. If you are using any of the supported operating systems you will find the install script, for that system, under bin/. In this example, I am using macOS so I will use the following command:
 
-    bin/install-osx.sh
+    bin/install-macos.sh
 
 #### *Note to macOS users
 Homebrew is required to install the dependencies for the system. Unfortunately I cannot offer support without Homebrew. If you do not have the Homebrew package manager installed, you can find it [here](https://brew.sh/).
@@ -84,7 +84,7 @@ Whenever you run a project with greathouse-wordpress, that project can run indep
 
 At the completion of the **install** script, the **configure** script will be kicked off automatically. If you want to run the configure script independently, you can run it with the following command:
 
-    bin/configure-osx.sh
+    bin/configure-macos.sh
 *Run the configure specific configure script meant for your operating system.
 
 The role of the configure script is to create a run script. It's interactive, which means it will ask you questions about your configuration, which you should answer.
@@ -116,7 +116,7 @@ If all of the values are correct you can type: y and it will create your "run sc
 The run script is created and it gives you two options for running your site.
 To run once, you can simply run the script in this example:
 
-    /Users/jessegreathouse/acme-sprocket-website/bin/run-osx.sh
+    /Users/jessegreathouse/acme-sprocket-website/bin/run-macos.sh
 If you want to set up the site as a service, that will restart when the computer/server boots, you can run the second line:
 
     sudo cp -f /Users/jessegreathouse/acme-sprocket-website/etc/com.jesse-greathuse.greathouse-wordpress.plist /Library/LaunchDaemons

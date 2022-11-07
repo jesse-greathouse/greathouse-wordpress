@@ -175,4 +175,4 @@ rm -rf ${OPT}/openresty-*/
 rm -rf ${OPT}/MacOSX-*/
 
 # Run the configuration
-${BIN}/configure-osx.sh
+${BIN}/configure-macos.sh

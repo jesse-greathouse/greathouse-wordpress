@@ -48,9 +48,9 @@ SRC="$( cd -P "$DIR/src" && pwd )"
 WEB="$( cd -P "$DIR/web" && pwd )"
 USER="$(whoami)"
 LOG="${DIR}/error.log"
-RUN_SCRIPT="${BIN}/run-osx.sh"
+RUN_SCRIPT="${BIN}/run-macos.sh"
 WP_CLI_SCRIPT="${BIN}/wp"
-SERVICE_RUN_SCRIPT="${BIN}/run-osx-service.sh"
+SERVICE_RUN_SCRIPT="${BIN}/run-macos-service.sh"
 PHP_FPM_CONF="${ETC}/php-fpm.d/php-fpm.conf"
 PHP_INI="${ETC}/php/php.ini"
 NGINX_CONF="${ETC}/nginx/nginx.conf"
@@ -502,7 +502,7 @@ sed -i '' "s __ERROR_PATH__ $DIR/error.log " ${LAUNCHD_CONF}
 sed -i '' "s __STANDARD_OUT_PATH__ $DIR/supervisord.log " ${LAUNCHD_CONF}
 sed -i '' "s __WORKING_DIRECTORY__ $DIR " ${LAUNCHD_CONF}
 
-printf "To run the website when OSX boots, paste this into the console: \n"
+printf "To run the website when MacOS boots, paste this into the console: \n"
 printf "sudo cp -f ${LAUNCHD_CONF} /Library/LaunchDaemons\n"
 printf "\n";
 printf "================================================================\n"

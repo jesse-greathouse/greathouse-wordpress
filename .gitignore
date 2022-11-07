@@ -37,7 +37,7 @@ get-pip.py
 !bin/generate-diffie-hellman.pl
 !bin/install-pear.sh
 !bin/install-amazon.sh
-!bin/install-osx.sh
+!bin/install-macos.sh
 !bin/install-ubuntu.sh
 !bin/install-rhel.sh
 !bin/install-centos.sh
@@ -46,7 +46,7 @@ get-pip.py
 !bin/stop.sh
 !bin/stop-docker.sh.dist
 !bin/run-docker.sh.dist
-!bin/configure-osx.sh
+!bin/configure-macos.sh
 !bin/configure-amazon.sh
 !bin/configure-docker.sh
 !bin/configure-ubuntu.sh
