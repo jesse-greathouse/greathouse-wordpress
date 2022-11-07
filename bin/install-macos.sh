@@ -45,10 +45,19 @@ SRC="$( cd -P "$DIR/src" && pwd )"
 WEB="$( cd -P "$DIR/web" && pwd )"
 TMP="$( cd -P "$DIR/tmp" && pwd )"
 
+# verify apple command line tools are installed
+XCODE="$( xcode-select -p )"
+
+if [ "$XCODE" != "/Applications/Xcode.app/Contents/Developer" ]; then
+	echo 'Please install Xcode command line tools and then run this script again.'
+	echo 'You can install Xcode CLT with: xcode-select --install'
+	exit 1
+fi
+
 #install dependencies
 brew upgrade
 
-brew install intltool autoconf automake python@3.8 gcc perl pcre \
+brew install intltool autoconf automake gcc perl pcre \
   curl-openssl libiconv pkg-config openssl@1.1 mysql-client oniguruma \
   pcre2 libxml2 icu4c imagemagick mysql libsodium libzip glib
 
