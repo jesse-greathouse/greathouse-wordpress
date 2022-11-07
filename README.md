@@ -14,12 +14,15 @@ The project is designed to be forked into new projects for specific wordpress in
 ## Use greathouse-wordpress as a template
 
 The [greathouse-wordpress](https://github.com/jesse-greathouse/greathouse-wordpress) project is not meant to be used directly. To get started, you will want to use the project as a template, to create your own new project. On the [Github Page](https://github.com/jesse-greathouse/greathouse-wordpress) click the "Use this template" button.
+
 ![Click the "Use this template" Button](https://i.imgur.com/ouHQ7hU.png)
 
 You will need to configure the new project in the next screen.
+
 ![Configure the Project](https://i.imgur.com/Y2mK1ek.png)
 
 When you click the "Create repository from template", you will have a new project created on Github.
+
 ![You will have a new repository](https://i.imgur.com/fKM4H1w.png)
 
 ## Clone your new repository
